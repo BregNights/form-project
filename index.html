@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <form action="#">
+
+        <header>
+            <h1>Formulário</h1>
+        </header>
+
+        <div>
+            <fieldset>
+                <legend id="titlealmoco" class="desc">Você almoçou?</legend>
+                <div>
+                    <input id="Fieldalmoco0" name="almoco" type="radio" checked value="Sim">
+                    <label class="choice" for="Fieldalmoco0">Sim</label>
+                </div>
+                <div>
+                    <input id="Fieldalmoco1" name="almoco" type="radio" value="Não">
+                    <label class="choice" for="Fieldalmoco1">Não</label>
+                </div>
+            </fieldset>
+        </div>
+        
+        <div>
+            <fieldset>
+                <legend id="titlejanta" class="desc">Você jantou?</legend>
+                <div>
+                    <input id="Fieldjantar0" name="jantar" type="radio" checked value="Sim">
+                    <label class="choice" for="Fieldjantar0">Sim</label>
+                </div>
+                <div>
+                    <input id="Fieldjantar1" name="jantar" type="radio" value="Não">
+                    <label class="choice" for="Fieldjantar1">Não</label>
+                </div>
+            </fieldset>
+        </div>
+        
+        <div>
+            <fieldset>
+                <legend id="titlejanta" class="desc">Você comeu besteira?</legend>
+                <div>
+                    <input id="Fieldbesteira0" name="besteira" type="radio" value="Sim">
+                    <label class="choice" for="Fieldbesteira0">Sim</label>
+                </div>
+                <div>
+                    <input id="Fieldbesteira1" name="besteira" type="radio" checked value="Não">
+                    <label class="choice" for="Fieldbesteira1">Não</label>
+                </div>
+            </fieldset>
+        </div>
+
+        <div>
+            <fieldset>
+                <legend id="titlejanta" class="desc">Fase da menstruação:</legend>
+                <div>
+                    <input id="Fieldfase0" name="menstruacao" type="radio" value="TPM">
+                    <label class="choice" for="Fieldfase0">TPM</label>
+                </div>
+                <div>
+                    <input id="Fieldfase1" name="menstruacao" type="radio" checked value="Normal">
+                    <label class="choice" for="Fieldfase1">Normal</label>
+                </div>
+                <div>
+                    <input id="Fieldfase2" name="menstruacao" type="radio" value="Menstruando">
+                    <label class="choice" for="Fieldfase2">Menstruando</label>
+                </div>
+                <div>
+                    <input id="Fieldfase3" name="menstruacao" type="radio" value="Atrasada">
+                    <label class="choice" for="Fieldfase3">Atrasada</label>
+                </div>
+            </fieldset>
+        </div>
+
+        <div>
+            <fieldset>
+                <legend id="titlejanta" class="desc">Peso</legend>
+                <div>
+                    <input id="peso"  type="number" placeholder="Kg">
+                </div>
+            </fieldset>
+        </div>
+
+        <div>
+            <div>
+                <input type="button" value="Concluir" onclick="Gerar()" id="concluir">
+            </div>
+        </div>
+    </form>
+    <div>
+        <table class="table" id="TableToExport">
+            <thead>
+                <tr>
+                    <th scope="col">Dia</th>
+                    <th scope="col">Almoço</th>
+                    <th scope="col">Jantar</th>
+                    <th scope="col">Comeu besteira?</th>
+                    <th scope="col">Fase menstrual</th>
+                    <th scope="col">Peso</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="res">
+
+            </tbody>
+        </table>
+    </div>
+    
+    <button id="sheetjsexport"><b>Gerar Excel</b></button>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script src="engine.js"></script>
+</body>
+</html>
