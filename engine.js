@@ -122,7 +122,7 @@ async function salvarDados() {
   const pesoValor = parseFloat(document.getElementById('peso').value)
 
   const dados = {
-    data: dataAtual-1,
+    data: dataAtual,
     almoco: almocoSelecionado,
     jantar: jantarSelecionado,
     besteira: besteiraSelecionado,
