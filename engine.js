@@ -1,9 +1,22 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js'
+import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js'
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCYL6yOY9EyHLYMsPK6QkPe4fIVmBJgHxg",
+  authDomain: "form-project-f9370.firebaseapp.com",
+  projectId: "form-project-f9370",
+  storageBucket: "form-project-f9370.appspot.com",
+  messagingSenderId: "1024202706941",
+  appId: "1:1024202706941:web:d23861d0cceb3a216e1394"
+}
+
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
+
 document.getElementById("sheetjsexport").addEventListener('click', function () {
   var wb = XLSX.utils.table_to_book(document.getElementById("TableToExport"))
   XLSX.writeFile(wb, "Relatório.xlsx")
-});
-
-const peso = document.getElementById('peso')
+})
 
 function data() {
   const date = new Date()
@@ -51,9 +64,17 @@ document.querySelector('table').addEventListener('click', function (event) {
   }
 })
 
-function Remover(linha) {
+async function Remover(linha) {
   if (confirm('Tem certeza que deseja remover esta linha?')) {
-    linha.remove()
+    const data = linha.children[0].textContent
+    const idDocumento = data.replace(/\//g, "-")
+
+    try {
+      await deleteDoc(doc(db, "registros", idDocumento))
+      linha.remove()
+    } catch (error) {
+      console.error("Erro ao remover o documento:", error)
+    }
   }
 }
 
@@ -64,11 +85,9 @@ function CreateTD(local, text) {
 }
 
 function Gerar() {
-  const pesoValor = parseFloat(peso.value)
-  if (peso.value === '') {
+  const pesoValor = parseFloat(document.getElementById('peso').value)
+  if (!pesoValor) {
     alert('Por favor, insira um valor para o peso!')
-  } else if (isNaN(pesoValor) || pesoValor < 50 || pesoValor > 150) {
-    alert('O peso deve estar entre 30 e 150 Kg!')
   } else {
     const tBody = document.querySelector('tbody.res')
     const dataAtual = data()
@@ -95,51 +114,94 @@ function Gerar() {
     CreateTD(createTR, faseMenstrauacaoSelecionado)
     CreateTD(createTR, `${peso.value} Kg`)
     CreateBtnRemover(createTR)
-    peso.value = ''
-    peso.focus()
   }
 }
 
-peso.addEventListener('keydown', function (event) {
+async function salvarDados() {
+  const dataAtual = new Date().toLocaleDateString("pt-BR").replace(/\//g, "-")
+  const pesoValor = parseFloat(document.getElementById('peso').value)
+
+  const dados = {
+    data: dataAtual,
+    almoco: almocoSelecionado,
+    jantar: jantarSelecionado,
+    besteira: besteiraSelecionado,
+    menstruacao: faseMenstrauacaoSelecionado,
+    peso: `${pesoValor} Kg`
+  }
+
+  try {
+    await setDoc(doc(collection(db, "registros"), dataAtual), dados)
+    console.log("Dados salvos com sucesso!")
+    alert("Dados salvos com sucesso!")
+  } catch (error) {
+    console.error("Erro ao salvar os dados:", error)
+  }
+}
+
+
+async function carregarDados() {
+  const tBody = document.querySelector('tbody.res')
+  tBody.innerHTML = ''
+
+  try {
+  const querySnapshot = await getDocs(collection(db, "registros"))
+
+    querySnapshot.forEach((doc) => {
+      const dados = doc.data()
+
+      const createTR = document.createElement('tr')
+      createTR.classList.add('informacoes')
+
+      CreateTD(createTR, dados.data)
+      CreateTD(createTR, dados.almoco)
+      CreateTD(createTR, dados.jantar)
+      CreateTD(createTR, dados.besteira)
+      CreateTD(createTR, dados.menstruacao)
+      CreateTD(createTR, dados.peso)
+      CreateBtnRemover(createTR)
+
+      tBody.appendChild(createTR)
+    })
+
+  } catch (error) {
+      console.error("Erro ao carregar os dados:", error)
+  }
+}
+
+document.getElementById('peso').addEventListener('keydown', function (event) {
   if (event.key === 'Enter') {
-    const btnConcluir = document.getElementById('concluir')
+    const btnConcluir = document.getElementById('btnGerar')
     event.preventDefault()
     btnConcluir.click()
   }
 })
 
-function save() {
-  const result = []
+document.getElementById("btnGerar").addEventListener("click", () => {
+  const pesoValor = parseFloat(document.getElementById('peso').value)
+  if (!pesoValor) {
+    alert('Por favor, insira um valor para o peso!')
+    return
+  }
+
+  let dataExistente = false
+  const dataAtual = new Date().toLocaleDateString("pt-BR").replace(/\//g, "-")
+
   document.querySelectorAll('.informacoes').forEach(row => {
-    const rowData = []
-    row.querySelectorAll('td').forEach(td => {
-      if (!td.querySelector('.btnRemover')) {
-        rowData.push(td.textContent)
-      }
-    })
-    result.push(rowData)
-  })
-  localStorage.setItem('informacoes', JSON.stringify(result))
-}
+    if (row.children[0].textContent === dataAtual) {
+      dataExistente = true
+    }
+  });
 
-function loadresults() {
-  const result = JSON.parse(localStorage.getItem('informacoes')) || []
-  const tBody = document.querySelector('tbody.res')
+  if (dataExistente) {
+    alert('Já existe uma entrada para esta data!')
+    return
+  }
 
-  document.querySelectorAll('.informacoes').forEach(row => row.remove())
+  Gerar()
+  salvarDados()
+  document.getElementById('peso').value = ''
+  document.getElementById('peso').focus()
+});
 
-  result.forEach(rowData => {
-    const createTR = document.createElement('tr')
-    createTR.classList.add('informacoes')
-
-    rowData.forEach(text => {
-      CreateTD(createTR, text)
-    })
-
-    CreateBtnRemover(createTR)
-    tBody.appendChild(createTR)
-  })
-}
-
-window.addEventListener('beforeunload', save)
-window.addEventListener('DOMContentLoaded', loadresults)
+document.addEventListener("DOMContentLoaded", carregarDados)

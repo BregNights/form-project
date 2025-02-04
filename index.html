@@ -90,7 +90,7 @@
 
         <div>
             <div>
-                <input type="button" value="Concluir" onclick="Gerar()" id="concluir">
+                <input type="button" value="Concluir" id="btnGerar">
             </div>
         </div>
     </form>
@@ -100,7 +100,7 @@
                 <tr>
                     <th scope="col">Dia</th>
                     <th scope="col">Almoço</th>
-                    <th scope="col">Janta</th>
+                    <th scope="col">Jantar</th>
                     <th scope="col">Comeu besteira?</th>
                     <th scope="col">Fase menstrual</th>
                     <th scope="col">Peso</th>
@@ -113,8 +113,8 @@
         </table>
     </div>
     
-    <button id="sheetjsexport"><b>Gerar Relatório</b></button>
+    <button id="sheetjsexport"><b>Gerar Excel</b></button>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-    <script src="engine.js"></script>
+    <script type="module" src="engine.js" defer></script>
 </body>
 </html>
