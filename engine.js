@@ -18,16 +18,6 @@ document.getElementById("sheetjsexport").addEventListener('click', function () {
   XLSX.writeFile(wb, "Relatório.xlsx")
 })
 
-function data() {
-  const date = new Date()
-  const dia = date.getDate().toString().padStart(2, "0")
-  const mes = (date.getMonth() + 1).toString().padStart(2, "0")
-  const ano = date.getFullYear()
-  // return dia,mes,ano
-
-  return `${dia}/${mes}/${ano}`
-}
-
 let almocoSelecionado = 'Sim'
 document.querySelectorAll('input[name="almoco"]').forEach(radio => {
   radio.addEventListener("change", () => almocoSelecionado = radio.value)
@@ -85,37 +75,26 @@ function CreateTD(local, text) {
   local.appendChild(CreateTD)
 }
 
+function dataAtual() {
+  const dataAtual = new Date().toLocaleDateString("pt-BR")
+  return dataAtual
+}
+
 function Gerar() {
   const pesoValor = parseFloat(document.getElementById('peso').value)
-  if (!pesoValor) {
-    alert('Por favor, insira um valor para o peso!')
-  } else {
     const tBody = document.querySelector('tbody.res')
-    const dataAtual = data()
-
-    let dataExistente = false
-    document.querySelectorAll('.informacoes').forEach(row => {
-      if(row.children[0].textContent === dataAtual) {
-        dataExistente = true
-      }
-    })
-
-    if(dataExistente) {
-      alert('Já existe uma entrada para esta data!')
-      return
-    }
 
     const createTR = document.createElement('tr')
     createTR.classList.add('informacoes')
     tBody.appendChild(createTR)
-    CreateTD(createTR, data())
+
+    CreateTD(createTR, dataAtual())
     CreateTD(createTR, almocoSelecionado)
     CreateTD(createTR, jantarSelecionado)
     CreateTD(createTR, besteiraSelecionado)
     CreateTD(createTR, faseMenstrauacaoSelecionado)
-    CreateTD(createTR, `${peso.value} Kg`)
+    CreateTD(createTR, `${pesoValor} Kg`)
     CreateBtnRemover(createTR)
-  }
 }
 
 async function salvarDados() {
@@ -133,13 +112,11 @@ async function salvarDados() {
 
   try {
     await setDoc(doc(collection(db, "registros"), dataAtual), dados)
-    console.log("Dados salvos com sucesso!")
     alert("Dados salvos com sucesso!")
   } catch (error) {
     console.error("Erro ao salvar os dados:", error)
   }
 }
-
 
 async function carregarDados() {
   const tBody = document.querySelector('tbody.res')
@@ -178,10 +155,6 @@ document.getElementById('peso').addEventListener('keydown', function (event) {
   }
 })
 
-function dataExistente() {
-  
-}
-
 document.getElementById("btnGerar").addEventListener("click", () => {
   const pesoValor = parseFloat(document.getElementById('peso').value)
   if (!pesoValor) {
@@ -190,13 +163,11 @@ document.getElementById("btnGerar").addEventListener("click", () => {
   }
 
   let dataExistente = false
-  const dataAtual = new Date().toLocaleDateString("pt-BR").replace(/\//g, "-")
-
   document.querySelectorAll('.informacoes').forEach(row => {
-    if (row.children[0].textContent === dataAtual) {
+    if (row.children[0].textContent === dataAtual()) {
       dataExistente = true
     }
-  });
+  })
 
   if (dataExistente) {
     alert('Já existe uma entrada para esta data!')
@@ -207,6 +178,6 @@ document.getElementById("btnGerar").addEventListener("click", () => {
   salvarDados()
   document.getElementById('peso').value = ''
   document.getElementById('peso').focus()
-});
+})
 
 document.addEventListener("DOMContentLoaded", carregarDados)
