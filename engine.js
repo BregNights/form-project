@@ -23,6 +23,7 @@ function data() {
   const dia = date.getDate().toString().padStart(2, "0")
   const mes = (date.getMonth() + 1).toString().padStart(2, "0")
   const ano = date.getFullYear()
+  // return dia,mes,ano
 
   return `${dia}/${mes}/${ano}`
 }
@@ -153,7 +154,7 @@ async function carregarDados() {
       const createTR = document.createElement('tr')
       createTR.classList.add('informacoes')
 
-      CreateTD(createTR, dados.data)
+      CreateTD(createTR, dados.data.replace(/-/g, "/"))
       CreateTD(createTR, dados.almoco)
       CreateTD(createTR, dados.jantar)
       CreateTD(createTR, dados.besteira)
@@ -176,6 +177,10 @@ document.getElementById('peso').addEventListener('keydown', function (event) {
     btnConcluir.click()
   }
 })
+
+function dataExistente() {
+  
+}
 
 document.getElementById("btnGerar").addEventListener("click", () => {
   const pesoValor = parseFloat(document.getElementById('peso').value)
