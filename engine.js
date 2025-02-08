@@ -64,11 +64,6 @@ async function Remover(linha) {
   }
 }
 
-function dataAtual() {
-  const dataAtual = new Date().toLocaleDateString("pt-BR")
-  return dataAtual
-}
-
 let datainput = ''
 const date = document.querySelector('#date')
 date.addEventListener('change', function () {
@@ -96,7 +91,6 @@ function Gerar() {
 }
 
 async function salvarDados() {
-  // const dataAtual = new Date().toLocaleDateString("pt-BR").replace(/\//g, "-")
   const pesoValor = parseFloat(document.getElementById('peso').value)
 
   const dados = {
@@ -167,7 +161,9 @@ document.getElementById("btnGerar").addEventListener("click", () => {
 
   let dataExistente = false
   document.querySelectorAll('.informacoes').forEach(row => {
-    if (row.children[0].textContent === dataAtual()) {
+    const data = datainput.replace(/-/g, "/")
+    
+    if (row.children[0].textContent === data) {
       dataExistente = true
     }
   })
