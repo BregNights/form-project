@@ -44,6 +44,12 @@ document.querySelector('table').addEventListener('click', function (event) {
   }
 })
 
+document.querySelector('table').addEventListener('click', function (event) {
+  if (event.target.classList.contains('btnEditar')) {
+    alert('Epa Epa, botão não implementado ainda!')
+  }
+})
+
 async function Remover(linha) {
   if (confirm('Tem certeza que deseja remover esta linha?')) {
     const data = linha.children[0].textContent
@@ -74,10 +80,6 @@ date.addEventListener('change', function () {
 function Gerar() {
   const pesoValor = parseFloat(document.getElementById('peso').value)
   const tBody = document.querySelector('tbody.res')
-
-  
-
-  
     
     tBody.innerHTML += `<tr class="informacoes">
                           <td>${datainput}</td>
@@ -86,7 +88,7 @@ function Gerar() {
                           <td>${besteiraSelecionado}</td>
                           <td>${faseMenstrauacaoSelecionado}</td>
                           <td>${pesoValor} Kg</td>
-                          <td class="btnAcoes">
+                          <td>
                             <button class="btnEditar">✏️</button>
                             <button class="btnRemover">❌</button>
                           </td>
@@ -131,7 +133,7 @@ async function carregarDados() {
                           <td>${dados.besteira}</td>
                           <td>${dados.menstruacao}</td>
                           <td>${dados.peso} Kg</td>
-                          <td class="btnAcoes">
+                          <td>
                             <button class="btnEditar">✏️</button>
                             <button class="btnRemover">❌</button>
                           </td>
@@ -155,6 +157,11 @@ document.getElementById("btnGerar").addEventListener("click", () => {
   const pesoValor = parseFloat(document.getElementById('peso').value)
   if (!pesoValor) {
     alert('Por favor, insira um valor para o peso!')
+    return
+  }
+
+  if(datainput === ''){
+    alert('Por favor, insira uma data!')
     return
   }
 
