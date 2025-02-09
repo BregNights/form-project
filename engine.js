@@ -69,12 +69,11 @@ const date = document.querySelector('#date')
 date.addEventListener('change', function () {
   const date = new Date(this.value + 'T00:00:00')
   datainput = date.toLocaleDateString('pt-BR').replace(/\//g, "-")
-  console.log(datainput)
 })
 
 function Gerar() {
   const pesoValor = parseFloat(document.getElementById('peso').value)
-  const tBody = document.querySelector('tbody.res')
+  const tBody = document.querySelector('.info')
     
     tBody.innerHTML += `<tr class="informacoes">
                           <td>${datainput}</td>
@@ -111,7 +110,7 @@ async function salvarDados() {
 }
 
 async function carregarDados() {
-  const tBody = document.querySelector('tbody.res')
+  const tBody = document.querySelector('.info')
   tBody.innerHTML = ''
 
   try {
@@ -141,13 +140,13 @@ async function carregarDados() {
 
 document.getElementById('peso').addEventListener('keydown', function (event) {
   if (event.key === 'Enter') {
-    const btnConcluir = document.getElementById('btnGerar')
+    const btnAdd = document.getElementById('btnAdd')
     event.preventDefault()
-    btnConcluir.click()
+    btnAdd.click()
   }
 })
 
-document.getElementById("btnGerar").addEventListener("click", () => {
+document.getElementById("btnAdd").addEventListener("click", () => {
   const pesoValor = parseFloat(document.getElementById('peso').value)
   if (!pesoValor) {
     alert('Por favor, insira um valor para o peso!')
